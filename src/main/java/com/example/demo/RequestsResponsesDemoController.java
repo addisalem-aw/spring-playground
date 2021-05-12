@@ -1,9 +1,7 @@
 package com.example.demo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 @RestController
 public class RequestsResponsesDemoController {
@@ -15,11 +13,14 @@ public class RequestsResponsesDemoController {
         return "Hello from Spring!";
     }
 
+   /////////////////////////////// Spring Math: PI with GET
     @GetMapping("/math/pi")
     public String mathPi() {
         return "3.141592653589793";
 
     }
+    ///////////////////////////////Spring Math:Calculate
+
     @GetMapping("/math/calculate")
     public String calculate(@RequestParam(defaultValue = "null") String operation, @RequestParam Integer x, @RequestParam Integer y) {
         if (operation.equals("add")) {
@@ -57,4 +58,32 @@ public class RequestsResponsesDemoController {
     public String calculateUsingMathService(@RequestParam(defaultValue = "null") String operation, @RequestParam Integer x, @RequestParam Integer y) {
         return mathService.calculate(operation, x, y);
     }
+//////////////////////////////////////////Spring Math:Volume with Path Variables
+    @GetMapping("/math/volume/{length}/{width}/{height}")
+    public String getVolumeUsingPathVariable(@PathVariable Integer length,@PathVariable Integer width,@PathVariable Integer height){
+        Integer volume=length*width*height;
+        return "The volume of a "+String.valueOf(length)+"x"
+                +String.valueOf(width)+"x"+String.valueOf(height)
+                +" rectangle is "+String.valueOf(volume);
+    }
+
+    @PostMapping("/math/volume/{length}/{width}/{height}")
+    public String postVolumeUsingPathVariable(@PathVariable Integer length,@PathVariable Integer width,@PathVariable Integer height){
+        Integer volume=length*width*height;
+        return "The volume of a "+String.valueOf(length)+"x"
+                +String.valueOf(width)+"x"+String.valueOf(height)
+                +" rectangle is "+String.valueOf(volume);
+    }
+
+    @PatchMapping("/math/volume/{length}/{width}/{height}")
+    public String patchVolumeUsingPathVariable(@PathVariable Integer length,@PathVariable Integer width,@PathVariable Integer height){
+        Integer volume=length*width*height;
+        return "The volume of a "+String.valueOf(length)+"x"
+                +String.valueOf(width)+"x"+String.valueOf(height)
+                +" rectangle is "+String.valueOf(volume);
+    }
+
+
+
+
 }
