@@ -7,12 +7,10 @@ import java.util.List;
 public class RequestsResponsesDemoController {
     @Autowired
    MathService mathService;
-
     @GetMapping("/")
     public String helloWorld() {
         return "Hello from Spring!";
     }
-
    /////////////////////////////// Spring Math: PI with GET
     @GetMapping("/math/pi")
     public String mathPi() {
@@ -23,30 +21,31 @@ public class RequestsResponsesDemoController {
 
     @GetMapping("/math/calculate")
     public String calculate(@RequestParam(defaultValue = "null") String operation, @RequestParam Integer x, @RequestParam Integer y) {
+        Integer result;
+        String operator;
         if (operation.equals("add")) {
-            //int result=Integer.parseInt(x)+Integer.parseInt(y);
-            Integer result = x + y;
-            return String.valueOf(x) + "+" + String.valueOf(y) + "=" + String.valueOf(result);
+             result = x + y;
+             operator="+";
         } else if (operation.equals("multiply")) {
-            Integer result = x * y;
-            return String.valueOf(x) + "*" + String.valueOf(y) + "=" + String.valueOf(result);
+             result = x * y;
+             operator="x";
         } else if (operation.equals("subtract")) {
-            Integer result = x - y;
-            return String.valueOf(x) + "-" + String.valueOf(y) + "=" + String.valueOf(result);
+             result = x - y;
+             operator="-";
         } else if (operation.equals("divide")) {
-            Integer result = x / y;
-            return String.valueOf(x) + "/" + String.valueOf(y) + "=" + String.valueOf(result);
+             result = x / y;
+             operator="/";
         } else {
-            Integer result = x + y;
-            return String.valueOf(x) + "+" + String.valueOf(y) + "=" + String.valueOf(result);
+             result = x + y;
+             operator="+";
         }
+        return String.format("%d %s %d = %d",x,operator,y,result);
     }
 
     @PostMapping("/math/sum")
     public String calculateSumOfNumbers(@RequestParam List<Integer> n) {
         Integer sum = 0;
         StringBuilder str = new StringBuilder();
-        //List values = null;
         for (Integer num : n) {
             sum = sum + num;
             str.append(num + "+");
@@ -54,36 +53,50 @@ public class RequestsResponsesDemoController {
         str.deleteCharAt(str.length() - 1);
         return str.toString() + "=" + String.valueOf(sum);
     }
+
     @GetMapping("/math/calculateuseservice")
     public String calculateUsingMathService(@RequestParam(defaultValue = "null") String operation, @RequestParam Integer x, @RequestParam Integer y) {
         return mathService.calculate(operation, x, y);
     }
+
 //////////////////////////////////////////Spring Math:Volume with Path Variables
     @GetMapping("/math/volume/{length}/{width}/{height}")
     public String getVolumeUsingPathVariable(@PathVariable Integer length,@PathVariable Integer width,@PathVariable Integer height){
         Integer volume=length*width*height;
-        return "The volume of a "+String.valueOf(length)+"x"
-                +String.valueOf(width)+"x"+String.valueOf(height)
-                +" rectangle is "+String.valueOf(volume);
+        return "The volume of a "+length+"x"
+                +width+"x"+height
+                +" rectangle is "+volume;
     }
-
     @PostMapping("/math/volume/{length}/{width}/{height}")
     public String postVolumeUsingPathVariable(@PathVariable Integer length,@PathVariable Integer width,@PathVariable Integer height){
         Integer volume=length*width*height;
-        return "The volume of a "+String.valueOf(length)+"x"
-                +String.valueOf(width)+"x"+String.valueOf(height)
-                +" rectangle is "+String.valueOf(volume);
+        return "The volume of a "+length+"x"
+                +width+"x"+height
+                +" rectangle is "+volume;
     }
 
     @PatchMapping("/math/volume/{length}/{width}/{height}")
     public String patchVolumeUsingPathVariable(@PathVariable Integer length,@PathVariable Integer width,@PathVariable Integer height){
         Integer volume=length*width*height;
-        return "The volume of a "+String.valueOf(length)+"x"
-                +String.valueOf(width)+"x"+String.valueOf(height)
-                +" rectangle is "+String.valueOf(volume);
+        return "The volume of a "+length+"x"
+                +width+"x"+height
+                +" rectangle is "+volume;
     }
 
+    ////////////////Spring Math: Calculate area
+    @PostMapping("/math/area")
+    public String postAreaUsingFormData(@RequestParam String type,@RequestParam(required = false) Double radius, @RequestParam(required = false) Double width, @RequestParam(required = false) Double height){
+        if(type.equals("circle")){
+            Double area=Math.PI*radius*radius;
+            return "Area of a circle with a radius of "+radius+" is "+ area;
+        }
+        else if(type.equals("rectangle")){
+            Double area=width*height;
+            return "Area of a rectangle with a width of "+width+" and height of "+height + " is "+ area;
+        }
+        else
+            return "Invalid";
 
-
+    }
 
 }

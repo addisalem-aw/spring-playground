@@ -5,22 +5,27 @@ import org.springframework.stereotype.Service;
 @Service
 public class MathService {
     public String calculate(String operation,Integer x,Integer y){
+        Integer result;
+        String operator;
         if (operation.equals("add")) {
-            Integer result = x + y;
-            return String.valueOf(x) + "+" + String.valueOf(y) + "=" + String.valueOf(result);
+             result = x + y;
+            operator="+";
         } else if (operation.equals("multiply")) {
-            Integer result = x * y;
-            return String.valueOf(x) + "*" + String.valueOf(y) + "=" + String.valueOf(result);
+             result = x * y;
+            operator="x";
         } else if (operation.equals("subtract")) {
-            Integer result = x - y;
-            return String.valueOf(x) + "-" + String.valueOf(y) + "=" + String.valueOf(result);
+             result = x - y;
+            operator="-";
         } else if (operation.equals("divide")) {
-            Integer result = x / y;
-            return String.valueOf(x) + "/" + String.valueOf(y) + "=" + String.valueOf(result);
+             result = x / y;
+            operator="/";
         } else {
-            Integer result = x + y;
-            return String.valueOf(x) + "+" + String.valueOf(y) + "=" + String.valueOf(result);
+             result = x + y;
+             operator="+";
         }
+        return String.format("%d %s %d = %d",x,operator,y,result);
+
     }
+//String.format("%d + %d = %d",y,z,result);
 
 }
