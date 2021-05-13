@@ -4,11 +4,15 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.RequestEntity.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -20,6 +24,8 @@ public class RequestResponsesDemoTest {
     MockMvc mvc;
     @MockBean
     private MathService mathservice;
+    @MockBean
+    private ShapeService shapeService;
 
 //////////////////////////Spring Math: Pi test case
     @Test
@@ -75,10 +81,8 @@ public class RequestResponsesDemoTest {
     }
     @Test
     public void testMathServiceClassAdditionOperation() throws Exception {
-        RequestBuilder request= MockMvcRequestBuilders.get("/math/calculateuseservice?operation=divide&x=30&y=5");
-
         when(mathservice.calculate("divide",30,5)).thenReturn("30 / 5 = 6");
-        this.mvc.perform(request).andExpect(status().isOk()); }
+    }
 
         ////////////////////////Spring Math:Volume with Path Variables test cases
     @Test
@@ -106,12 +110,29 @@ public class RequestResponsesDemoTest {
 //////////Spring Math: test case for calculating area using form data
     @Test
     public void testAreaOfCircle() throws Exception {
-        RequestBuilder request=MockMvcRequestBuilders.post("/math/area")
-                .param("type","circle")
-                .param("radius","4");
-        this.mvc.perform(request).andExpect(status().isOk())
-                .andExpect(content().string("Area of a circle with a radius of 4.0 is 50.26548245743669"));
+        Shape shape = new Shape();
+        shape.setType("circle");
+        shape.setRadius(4.0);
+        when(shapeService.calculateArea(shape)).thenReturn("Area of a circle with a radius of 4.0 is 50.26548245743669");
+        RequestBuilder request=MockMvcRequestBuilders.patch("/math/volume/6/7/8");
+        mvc.perform(((MockHttpServletRequestBuilder) request)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .accept(MediaType.APPLICATION_FORM_URLENCODED))
+                .andExpect(status().isOk());
+    }
 
+    @Test
+    public void testAreaOfRectangle() throws Exception {
+        Shape shape = new Shape();
+        shape.setType("rectangle");
+        shape.setWidth(5.0);
+        shape.setHeight(5.0);
+        when(shapeService.calculateArea(shape)).thenReturn("Area of a rectangle with a width of 5.0 and height of 5.0 is 25.0");
+        RequestBuilder request=MockMvcRequestBuilders.patch("/math/volume/6/7/8");
+        mvc.perform(((MockHttpServletRequestBuilder) request)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .accept(MediaType.APPLICATION_FORM_URLENCODED))
+                .andExpect(status().isOk());
     }
 
 }

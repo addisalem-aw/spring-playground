@@ -1,5 +1,6 @@
 package com.example.demo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -7,6 +8,8 @@ import java.util.List;
 public class RequestsResponsesDemoController {
     @Autowired
    MathService mathService;
+    @Autowired
+    ShapeService shapeService;
     @GetMapping("/")
     public String helloWorld() {
         return "Hello from Spring!";
@@ -84,19 +87,9 @@ public class RequestsResponsesDemoController {
     }
 
     ////////////////Spring Math: Calculate area
-    @PostMapping("/math/area")
-    public String postAreaUsingFormData(@RequestParam String type,@RequestParam(required = false) Double radius, @RequestParam(required = false) Double width, @RequestParam(required = false) Double height){
-        if(type.equals("circle")){
-            Double area=Math.PI*radius*radius;
-            return "Area of a circle with a radius of "+radius+" is "+ area;
-        }
-        else if(type.equals("rectangle")){
-            Double area=width*height;
-            return "Area of a rectangle with a width of "+width+" and height of "+height + " is "+ area;
-        }
-        else
-            return "Invalid";
-
+    @PostMapping(value = "/math/area", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public String postAreaUsingFormData( Shape shape){
+        return shapeService.calculateArea(shape);
     }
 
 }
